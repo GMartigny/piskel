@@ -26,8 +26,6 @@
       {key : 'ctrl+v', description : 'Paste the copied area'},
       {key : 'shift', description : 'Hold to move the content'}
     ];
-
-    $.subscribe(Events.SELECTION_DISMISSED, this.onSelectionDismissed_.bind(this));
   };
 
   pskl.utils.inherit(ns.BaseSelect, pskl.tools.drawing.BaseTool);
@@ -54,7 +52,7 @@
       this.mode = 'moveSelection';
       if (event.shiftKey && !this.isMovingContent_) {
         this.isMovingContent_ = true;
-        $.publish(Events.CLIPBOARD_CUT);
+        $.publish(Events.SELECTION_CUT);
         this.drawSelectionOnOverlay_(overlay);
       }
       this.onSelectionMoveStart_(col, row, frame, overlay);
@@ -113,24 +111,16 @@
   };
 
   /**
-   * Protected method, should be called when the selection is committed,
-   * typically by clicking outside of the selected area.
+   * Protected method, should be called when the selection is dismissed.
    */
-  ns.BaseSelect.prototype.commitSelection = function () {
+  ns.BaseSelect.prototype.commitSelection = function (overlay) {
     if (this.isMovingContent_) {
-      $.publish(Events.CLIPBOARD_PASTE);
+      $.publish(Events.SELECTION_PASTE);
       this.isMovingContent_ = false;
     }
 
     // Clean previous selection:
     $.publish(Events.SELECTION_DISMISSED);
-  };
-
-  /**
-   * Protected method, should be called when the selection is dismissed.
-   */
-  ns.BaseSelect.prototype.onSelectionDismissed_ = function () {
-    var overlay = pskl.app.drawingController.overlayFrame;
     overlay.clear();
     this.hasSelection = false;
   };

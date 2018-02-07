@@ -82,12 +82,4 @@
 
   ns.BaseTool.prototype.releaseToolAt = function (col, row, frame, overlay, event) {};
 
-  /**
-   * Does the tool support the ALT modifier. To be overridden by subclasses.
-   *
-   * @return {Boolean} true if the tool supports ALT.
-   */
-  ns.BaseTool.prototype.supportsAlt = function () {
-    return false;
-  };
 })();

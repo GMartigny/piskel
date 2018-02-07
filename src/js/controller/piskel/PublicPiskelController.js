@@ -31,7 +31,6 @@
     this.saveWrap_('duplicateFrameAt', true);
     this.saveWrap_('moveFrame', true);
     this.saveWrap_('createLayer', true);
-    this.saveWrap_('duplicateCurrentLayer', true);
     this.saveWrap_('mergeDownLayerAt', true);
     this.saveWrap_('moveLayerUp', true);
     this.saveWrap_('moveLayerDown', true);
@@ -49,25 +48,14 @@
     return this.piskelController;
   };
 
-  /**
-   * Set the current piskel. Will reset the selected frame and layer unless specified
-   * @param {Object} piskel
-   * @param {Object} options:
-   *                 preserveState {Boolean} if true, keep the selected frame and layer
-   *                 noSnapshot {Boolean} if true, do not save a snapshot in the piskel
-   *                            history for this call to setPiskel
-   */
-  ns.PublicPiskelController.prototype.setPiskel = function (piskel, options) {
-    this.piskelController.setPiskel(piskel, options);
+  ns.PublicPiskelController.prototype.setPiskel = function (piskel, preserveState) {
+    this.piskelController.setPiskel(piskel, preserveState);
 
     $.publish(Events.FRAME_SIZE_CHANGED);
     $.publish(Events.PISKEL_RESET);
-
-    if (!options || !options.noSnapshot) {
-      $.publish(Events.PISKEL_SAVE_STATE, {
-        type : pskl.service.HistoryService.SNAPSHOT
-      });
-    }
+    $.publish(Events.PISKEL_SAVE_STATE, {
+      type : pskl.service.HistoryService.SNAPSHOT
+    });
   };
 
   ns.PublicPiskelController.prototype.resetWrap_ = function (methodName) {

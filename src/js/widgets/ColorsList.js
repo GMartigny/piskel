@@ -17,7 +17,7 @@
       items: '.create-palette-color'
     });
 
-    pskl.utils.Event.addEventListener(this.colorsList, 'click', this.onColorContainerClick_, this);
+    this.colorsList.addEventListener('click', this.onColorContainerClick_.bind(this));
 
     var colorPickerContainer = container.querySelector('.color-picker-container');
     this.hslRgbColorPicker = new pskl.widgets.HslRgbColorPicker(colorPickerContainer, this.onColorUpdated_.bind(this));
@@ -40,10 +40,6 @@
   };
 
   ns.ColorsList.prototype.destroy = function () {
-    pskl.utils.Event.removeAllEventListeners(this);
-
-    $(this.container).sortable('destroy');
-
     this.hslRgbColorPicker.destroy();
     this.container = null;
     this.colorsList = null;

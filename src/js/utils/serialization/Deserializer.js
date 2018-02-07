@@ -56,22 +56,22 @@
 
     // Prepare a frames array to store frame objects extracted from the chunks.
     var frames = [];
-    Q.all(chunks.map(function (chunk) {
+    Promise.all(chunks.map(function (chunk) {
       // Create a promise for each chunk.
-      var deferred = Q.defer();
-      var image = new Image();
-      // Load the chunk image in an Image object.
-      image.onload = function () {
-        // extract the chunkFrames from the chunk image
-        var chunkFrames = pskl.utils.FrameUtils.createFramesFromChunk(image, chunk.layout);
-        // add each image to the frames array, at the extracted index
-        chunkFrames.forEach(function (chunkFrame) {
-          frames[chunkFrame.index] = chunkFrame.frame;
-        });
-        deferred.resolve();
-      };
-      image.src = chunk.base64PNG;
-      return deferred.promise;
+      return new Promise(function (resolve, reject) {
+        var image = new Image();
+        // Load the chunk image in an Image object.
+        image.onload = function () {
+          // extract the chunkFrames from the chunk image
+          var chunkFrames = pskl.utils.FrameUtils.createFramesFromChunk(image, chunk.layout);
+          // add each image to the frames array, at the extracted index
+          chunkFrames.forEach(function (chunkFrame) {
+            frames[chunkFrame.index] = chunkFrame.frame;
+          });
+          resolve();
+        };
+        image.src = chunk.base64PNG;
+      });
     })).then(function () {
       frames.forEach(layer.addFrame.bind(layer));
       this.layers_[index] = layer;

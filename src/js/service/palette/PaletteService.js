@@ -3,12 +3,11 @@
 
   ns.PaletteService = function () {
     this.dynamicPalettes = [];
-    // Exposed for tests.
-    this.localStorageGlobal = window.localStorage;
+    this.localStorageService = window.localStorage;
   };
 
   ns.PaletteService.prototype.getPalettes = function () {
-    var palettesString = this.localStorageGlobal.getItem('piskel.palettes');
+    var palettesString = this.localStorageService.getItem('piskel.palettes');
     var palettes = JSON.parse(palettesString) || [];
     palettes = palettes.map(function (palette) {
       return pskl.model.Palette.fromObject(palette);
@@ -55,7 +54,7 @@
     palettes = palettes.filter(function (palette) {
       return this.dynamicPalettes.indexOf(palette) === -1;
     }.bind(this));
-    this.localStorageGlobal.setItem('piskel.palettes', JSON.stringify(palettes));
+    this.localStorageService.setItem('piskel.palettes', JSON.stringify(palettes));
     $.publish(Events.PALETTE_LIST_UPDATED);
   };
 

@@ -13,12 +13,11 @@
     this.cheatsheetEl = document.getElementById('cheatsheetContainer');
     this.eventTrapInput = document.getElementById('cheatsheetEventTrap');
 
-    this.addEventListener('.cheatsheet-restore-defaults', 'click', this.onRestoreDefaultsClick_);
-    this.addEventListener(this.cheatsheetEl, 'click', this.onCheatsheetClick_);
-    this.addEventListener(this.eventTrapInput, 'keydown', this.onEventTrapKeydown_);
+    pskl.utils.Event.addEventListener('.cheatsheet-restore-defaults', 'click', this.onRestoreDefaultsClick_, this);
+    pskl.utils.Event.addEventListener(this.cheatsheetEl, 'click', this.onCheatsheetClick_, this);
+    pskl.utils.Event.addEventListener(this.eventTrapInput, 'keydown', this.onEventTrapKeydown_, this);
 
-    this.onShortcutsChanged_ = this.onShortcutsChanged_.bind(this);
-    $.subscribe(Events.SHORTCUTS_CHANGED, this.onShortcutsChanged_);
+    $.subscribe(Events.SHORTCUTS_CHANGED, this.onShortcutsChanged_.bind(this));
 
     this.initMarkup_();
     document.querySelector('.cheatsheet-helptext').setAttribute('title', this.getHelptextTitle_());
@@ -26,11 +25,8 @@
 
   ns.CheatsheetController.prototype.destroy = function () {
     this.eventTrapInput.blur();
-
-    $.unsubscribe(Events.SHORTCUTS_CHANGED, this.onShortcutsChanged_);
+    pskl.utils.Event.removeAllEventListeners();
     this.cheatsheetEl = null;
-
-    this.superclass.destroy.call(this);
   };
 
   ns.CheatsheetController.prototype.onRestoreDefaultsClick_ = function () {
@@ -144,8 +140,7 @@
       title : title,
       icon : descriptor.iconClass,
       description : description,
-      // Avoid sanitization
-      '!key!' : this.formatKey_(shortcut.getDisplayKey()),
+      key : this.formatKey_(shortcut.getDisplayKey()),
       className : shortcutClasses.join(' ')
     });
 
@@ -157,10 +152,10 @@
       key = key.replace('ctrl', 'cmd');
       key = key.replace('alt', 'option');
     }
-    key = key.replace(/left/i, '&larr;');
-    key = key.replace(/up/i, '&uarr;');
-    key = key.replace(/right/i, '&rarr;');
-    key = key.replace(/down/i, '&darr;');
+    key = key.replace(/left/i, '&#65513;');
+    key = key.replace(/up/i, '&#65514;');
+    key = key.replace(/right/i, '&#65515;');
+    key = key.replace(/down/i, '&#65516;');
     key = key.replace(/>/g, '&gt;');
     key = key.replace(/</g, '&lt;');
     // add spaces around '+' delimiters

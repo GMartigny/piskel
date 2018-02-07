@@ -17,12 +17,9 @@
     var isChrome = pskl.utils.UserAgent.isChrome;
 
     var changeEvent = (isChrome || isFirefox) ? 'input' : 'change';
-    pskl.utils.Event.addEventListener(this.container, changeEvent, this.onPickerChange_, this);
-    pskl.utils.Event.addEventListener(this.container, 'keydown', this.onPickerChange_, this);
-
-    // Cannot use pskl.utils.Event with useCapture for now ...
-    this.onBlur_ = this.onBlur_.bind(this);
-    this.container.addEventListener('blur', this.onBlur_, true);
+    this.container.addEventListener(changeEvent, this.onPickerChange_.bind(this));
+    this.container.addEventListener('keydown', this.onKeydown_.bind(this));
+    this.container.addEventListener('blur', this.onBlur_.bind(this), true);
 
     this.spectrumEl = this.container.querySelector('.color-picker-spectrum');
 
@@ -37,13 +34,6 @@
   };
 
   ns.HslRgbColorPicker.prototype.destroy = function () {
-    // Remove event listeners.
-    pskl.utils.Event.removeAllEventListeners(this);
-    this.container.removeEventListener('blur', this.onBlur_, true);
-
-    // Destroy spectrum widget.
-    $(this.spectrumEl).spectrum('destroy');
-
     this.container = null;
     this.spectrumEl = null;
   };
@@ -227,8 +217,7 @@
     var dimension = slider.dataset.dimension;
     var model = slider.dataset.model;
 
-    var start;
-    var end;
+    var start, end;
     var isHueSlider = dimension === 'h';
     if (!isHueSlider) {
       var colors = this.getSliderBackgroundColors_(model, dimension);

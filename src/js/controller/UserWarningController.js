@@ -9,7 +9,7 @@
   // This method is not attached to the prototype because we want to trigger it
   // from markup generated for a notification message.
   ns.UserWarningController.showPerformanceInfoDialog = function () {
-    $.publish(Events.DIALOG_SHOW, {
+    $.publish(Events.DIALOG_DISPLAY, {
       dialogId: 'performance-info'
     });
   };
@@ -38,11 +38,7 @@
     var isWarningDisplayed = this.performanceLinkEl.classList.contains('visible');
 
     // Show/hide the performance warning link depending on the received report.
-    if (shouldDisplayWarning) {
-      this.performanceLinkEl.classList.add('visible');
-    } else {
-      this.performanceLinkEl.classList.remove('visible');
-    }
+    this.performanceLinkEl.classList.toggle('visible', shouldDisplayWarning);
 
     // Show a notification message if the new report indicates a performance issue
     // and we were not displaying a warning before.

@@ -31,7 +31,7 @@
       }
 
       if (this.piskelName_) {
-        this.piskelName_.textContent = name;
+        this.piskelName_.innerHTML = name;
       }
     } catch (e) {
       console.warn('Could not update header : ' + e.message);

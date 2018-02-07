@@ -190,7 +190,7 @@
     var json = {
       'frames': frames,
       'meta': {
-        'app': 'https://github.com/piskelapp/piskel/',
+        'app': 'https://github.com/juliandescottes/piskel/',
         'version': '1.0',
         'image': name + '.png',
         'format': 'RGBA8888',
@@ -207,14 +207,6 @@
   };
 
   ns.PngExportController.prototype.onDataUriClick_ = function (evt) {
-    var popup = window.open('about:blank');
-    var dataUri = this.createPngSpritesheet_().toDataURL('image/png');
-    window.setTimeout(function () {
-      var html = pskl.utils.Template.getAndReplace('data-uri-export-partial', {
-        src: dataUri
-      });
-      popup.document.title = dataUri;
-      popup.document.body.innerHTML = html;
-    }.bind(this), 500);
+    window.open(this.createPngSpritesheet_().toDataURL('image/png'));
   };
 })();

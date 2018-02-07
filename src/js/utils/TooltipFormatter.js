@@ -9,8 +9,7 @@
     return pskl.utils.Template.replace(tpl, {
       helptext : helpText,
       shortcut : shortcut,
-      // Avoid sanitization for descriptors (markup)
-      '!descriptors!' : this.formatDescriptors_(descriptors)
+      descriptors : this.formatDescriptors_(descriptors)
     });
   };
 

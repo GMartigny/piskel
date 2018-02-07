@@ -1,7 +1,8 @@
 (function () {
   var ns = $.namespace('pskl.controller.dialogs');
 
-  ns.BrowseLocalController = function (piskelController) {};
+  ns.BrowseLocalController = function (piskelController) {
+  };
 
   pskl.utils.inherit(ns.BrowseLocalController, ns.AbstractDialogController);
 
@@ -10,7 +11,7 @@
 
     this.localStorageItemTemplate_ = pskl.utils.Template.get('local-storage-item-template');
 
-    this.service_ = pskl.app.indexedDbStorageService;
+    this.service_ = pskl.app.localStorageService;
     this.piskelList = $('.local-piskel-list');
     this.prevSessionContainer = $('.previous-session');
 
@@ -36,24 +37,21 @@
   };
 
   ns.BrowseLocalController.prototype.fillLocalPiskelsList_ = function () {
-    this.service_.getKeys().then(function (keys) {
-      var html = '';
-      keys.sort(function (k1, k2) {
-        if (k1.date < k2.date) {return 1;}
-        if (k1.date > k2.date) {return -1;}
-        return 0;
-      });
+    var html = '';
+    var keys = this.service_.getKeys();
 
-      keys.forEach((function (key) {
-        var date = pskl.utils.DateUtils.format(key.date, '{{Y}}/{{M}}/{{D}} {{H}}:{{m}}');
-        html += pskl.utils.Template.replace(this.localStorageItemTemplate_, {
-          name : key.name,
-          date : date
-        });
-      }).bind(this));
+    keys.sort(function (k1, k2) {
+      if (k1.date < k2.date) {return 1;}
+      if (k1.date > k2.date) {return -1;}
+      return 0;
+    });
 
-      var tableBody_ = this.piskelList.get(0).tBodies[0];
-      tableBody_.innerHTML = html;
-    }.bind(this));
+    keys.forEach((function (key) {
+      var date = pskl.utils.DateUtils.format(key.date, '{{Y}}/{{M}}/{{D}} {{H}}:{{m}}');
+      html += pskl.utils.Template.replace(this.localStorageItemTemplate_, {name : key.name, date : date});
+    }).bind(this));
+
+    var tableBody_ = this.piskelList.get(0).tBodies[0];
+    tableBody_.innerHTML = html;
   };
 })();

@@ -51,17 +51,12 @@
   };
 
   ns.PalettesListController.prototype.fillColorListContainer = function () {
+
     var colors = this.getSelectedPaletteColors_();
 
     if (colors.length > 0) {
-      var html = colors.filter(function (color) {
-        return !!color;
-      }).map(function (color, index) {
-        return pskl.utils.Template.replace(this.paletteColorTemplate_, {
-          color : color,
-          index : index + 1,
-          title : color.toUpperCase()
-        });
+      var html = colors.map(function (color, index) {
+        return pskl.utils.Template.replace(this.paletteColorTemplate_, {color : color, index : index});
       }.bind(this)).join('');
       this.colorListContainer_.innerHTML = html;
 
@@ -69,10 +64,6 @@
     } else {
       this.colorListContainer_.innerHTML = pskl.utils.Template.get('palettes-list-no-colors-partial');
     }
-
-    // If we have more than 10 colors, use tiny mode, where 10 colors will fit on the same
-    // line.
-    this.colorListContainer_.classList.toggle('tiny', colors.length > 10);
   };
 
   ns.PalettesListController.prototype.selectPalette = function (paletteId) {
@@ -110,7 +101,7 @@
     var currentIndex = 0;
     var selectedColor = document.querySelector('.' + PRIMARY_COLOR_CLASSNAME);
     if (selectedColor) {
-      currentIndex = parseInt(selectedColor.dataset.colorIndex, 10) - 1;
+      currentIndex = parseInt(selectedColor.dataset.colorIndex, 10);
     }
     return currentIndex;
   };
@@ -148,14 +139,14 @@
   };
 
   ns.PalettesListController.prototype.onCreatePaletteClick_ = function (evt) {
-    $.publish(Events.DIALOG_SHOW, {
+    $.publish(Events.DIALOG_DISPLAY, {
       dialogId : 'create-palette'
     });
   };
 
   ns.PalettesListController.prototype.onEditPaletteClick_ = function (evt) {
     var paletteId = this.colorPaletteSelect_.value;
-    $.publish(Events.DIALOG_SHOW, {
+    $.publish(Events.DIALOG_DISPLAY, {
       dialogId : 'create-palette',
       initArgs : paletteId
     });

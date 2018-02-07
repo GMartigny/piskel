@@ -2,13 +2,6 @@
   var ns = $.namespace('pskl.utils');
 
   ns.LayerUtils = {
-    clone : function (layer) {
-      var clonedFrames = layer.getFrames().map(function (frame) {
-        return frame.clone();
-      });
-      return pskl.model.Layer.fromFrames(layer.getName() + ' (clone)', clonedFrames);
-    },
-
     mergeLayers : function (layerA, layerB) {
       var framesA = layerA.getFrames();
       var framesB = layerB.getFrames();

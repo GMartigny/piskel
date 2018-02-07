@@ -102,7 +102,7 @@
       this.disablePreviewSizeWidget_('No other option available');
       validSizes = ['original'];
     } else if (seamlessModeEnabled) {
-      this.disablePreviewSizeWidget_('Disabled in tile mode');
+      this.disablePreviewSizeWidget_('Disabled in seamless mode');
       validSizes = ['original'];
     } else {
       this.enablePreviewSizeWidget_();
@@ -124,13 +124,7 @@
       if (this.previewSizes.hasOwnProperty(size)) {
         var previewSize = this.previewSizes[size];
         var isSizeEnabled = validSizes.indexOf(size) != -1;
-
-        // classList.toggle is not available on IE11.
-        if (isSizeEnabled) {
-          previewSize.button.classList.remove('preview-contextual-action-hidden');
-        } else {
-          previewSize.button.classList.add('preview-contextual-action-hidden');
-        }
+        previewSize.button.classList.toggle('preview-contextual-action-hidden', !isSizeEnabled);
       }
     }
 
@@ -180,13 +174,7 @@
   ns.PreviewController.prototype.updateOnionSkinPreview_ = function () {
     var enabledClassname = 'preview-toggle-onion-skin-enabled';
     var isEnabled = pskl.UserSettings.get(pskl.UserSettings.ONION_SKIN);
-
-    // classList.toggle is not available on IE11.
-    if (isEnabled) {
-      this.toggleOnionSkinButton.classList.add(enabledClassname);
-    } else {
-      this.toggleOnionSkinButton.classList.remove(enabledClassname);
-    }
+    this.toggleOnionSkinButton.classList.toggle(enabledClassname, isEnabled);
   };
 
   ns.PreviewController.prototype.selectPreviewSizeButton_ = function () {
@@ -309,8 +297,7 @@
     var isSeamless = pskl.UserSettings.get(pskl.UserSettings.SEAMLESS_MODE);
     this.renderer.setRepeated(isSeamless);
 
-    var width;
-    var height;
+    var height, width;
 
     if (isSeamless) {
       height = PREVIEW_SIZE;

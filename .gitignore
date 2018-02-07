@@ -1,4 +1,4 @@
-# mac artifacts
+# mac artefacts
 *.DS_Store
 
 # nodejs local installs
@@ -15,11 +15,9 @@ cache
 # netbeans project folder
 nbproject
 
-# vscode workspace folder
-.vscode
-
 # git stackdumps
 *.stackdump
+
 
 # diffs
 diff.txt

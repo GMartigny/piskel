@@ -11,7 +11,6 @@
   ns.FramesListController = function (piskelController, container) {
     this.piskelController = piskelController;
     this.container = container;
-    this.previewList = container.querySelector('#preview-list');
     this.refreshZoom_();
 
     this.redrawFlag = true;
@@ -32,9 +31,8 @@
 
     $.subscribe(Events.PISKEL_RESET, this.refreshZoom_.bind(this));
 
-    this.previewListScroller = document.querySelector('#preview-list-scroller');
-    this.previewListScroller.addEventListener('scroll', this.updateScrollerOverflows.bind(this));
-    this.container.addEventListener('click', this.onContainerClick_.bind(this));
+    $('#preview-list-scroller').scroll(this.updateScrollerOverflows.bind(this));
+    this.container.get(0).addEventListener('click', this.onContainerClick_.bind(this));
     this.updateScrollerOverflows();
   };
 
@@ -66,11 +64,11 @@
   };
 
   ns.FramesListController.prototype.updateScrollerOverflows = function () {
-    var scroller = this.previewListScroller;
-    var scrollerHeight = scroller.offsetHeight;
-    var scrollTop = scroller.scrollTop;
-    var scrollerContentHeight = this.previewList.offsetHeight;
-    var treshold = this.container.querySelector('.top-overflow').offsetHeight;
+    var scroller = $('#preview-list-scroller');
+    var scrollerHeight = scroller.height();
+    var scrollTop = scroller.scrollTop();
+    var scrollerContentHeight = $('#preview-list').height();
+    var treshold = $('.top-overflow').height();
     var overflowTop = false;
     var overflowBottom = false;
 
@@ -83,8 +81,9 @@
         overflowBottom = true;
       }
     }
-    this.container.classList.toggle('top-overflow-visible', overflowTop);
-    this.container.classList.toggle('bottom-overflow-visible', overflowBottom);
+    var wrapper = $('#preview-list-wrapper');
+    wrapper.toggleClass('top-overflow-visible', overflowTop);
+    wrapper.toggleClass('bottom-overflow-visible', overflowBottom);
   };
 
   ns.FramesListController.prototype.onContainerClick_ = function (event) {
@@ -98,12 +97,12 @@
     if (action === ACTION.CLONE) {
       this.piskelController.duplicateFrameAt(index);
       var clonedTile = this.createPreviewTile_(index + 1);
-      this.previewList.insertBefore(clonedTile, this.tiles[index].nextSibling);
+      this.container.get(0).insertBefore(clonedTile, this.tiles[index].nextSibling);
       this.tiles.splice(index, 0, clonedTile);
       this.updateScrollerOverflows();
     } else if (action === ACTION.DELETE) {
       this.piskelController.removeFrameAt(index);
-      this.previewList.removeChild(this.tiles[index]);
+      this.container.get(0).removeChild(this.tiles[index]);
       this.tiles.splice(index, 1);
       this.updateScrollerOverflows();
     } else if (action === ACTION.SELECT && !this.justDropped) {
@@ -112,7 +111,7 @@
       this.piskelController.addFrame();
       var newtile = this.createPreviewTile_(this.tiles.length);
       this.tiles.push(newtile);
-      this.previewList.insertBefore(newtile, this.addFrameTile);
+      this.container.get(0).insertBefore(newtile, this.addFrameTile);
       this.updateScrollerOverflows();
     }
 
@@ -148,7 +147,7 @@
     }
 
     // Hide/Show buttons if needed
-    var buttons = this.container.querySelectorAll('.delete-frame-action, .dnd-action');
+    var buttons = this.container.get(0).querySelectorAll('.delete-frame-action, .dnd-action');
     var display = (this.piskelController.getFrameCount() > 1) ? 'block' : 'none';
     for (i = 0, length = buttons.length; i < length; i++) {
       buttons[i].style.display = display;
@@ -159,8 +158,7 @@
   };
 
   ns.FramesListController.prototype.createPreviews_ = function () {
-    this.previewList.innerHTML = '';
-
+    this.container.html('');
     // Manually remove tooltips since mouseout events were shortcut by the DOM refresh:
     $('.tooltip').remove();
 
@@ -168,7 +166,7 @@
 
     for (var i = 0 ; i < frameCount ; i++) {
       var tile = this.createPreviewTile_(i);
-      this.previewList.appendChild(tile);
+      this.container.append(tile);
       this.tiles[i] = tile;
     }
     // Append 'new empty frame' button
@@ -178,7 +176,7 @@
     newFrameButton.setAttribute('data-tile-action', ACTION.NEW_FRAME);
     newFrameButton.innerHTML = '<div class="add-frame-action-icon icon-frame-plus-white">' +
       '</div><div class="label">Add new frame</div>';
-    this.previewList.appendChild(newFrameButton);
+    this.container.append(newFrameButton);
     this.addFrameTile = newFrameButton;
 
     this.updateScrollerOverflows();
@@ -188,7 +186,8 @@
    * @private
    */
   ns.FramesListController.prototype.initDragndropBehavior_ = function () {
-    $(this.previewList).sortable({
+
+    $('#preview-list').sortable({
       placeholder: 'preview-tile preview-tile-drop-proxy',
       update: $.proxy(this.onUpdate_, this),
       stop: $.proxy(this.onSortableStop_, this),
@@ -196,7 +195,7 @@
       axis: 'y',
       tolerance: 'pointer'
     });
-    $(this.previewList).disableSelection();
+    $('#preview-list').disableSelection();
   };
 
   /**

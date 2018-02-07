@@ -10,16 +10,10 @@
   ns.app = {
 
     init : function () {
-      // Run preferences migration scripts for version v0.12.0
-      pskl.UserSettings.migrate_to_v0_12();
-
       /**
        * When started from APP Engine, appEngineToken_ (Boolean) should be set on window.pskl
        */
       this.isAppEngineVersion = !!pskl.appEngineToken_;
-
-      // This id is used to keep track of sessions in the BackupService.
-      this.sessionId = pskl.utils.Uuid.generate();
 
       this.shortcutService = new pskl.service.keyboard.ShortcutService();
       this.shortcutService.init();
@@ -84,7 +78,7 @@
 
       this.framesListController = new pskl.controller.FramesListController(
         this.piskelController,
-        $('#preview-list-wrapper').get(0));
+        $('#preview-list'));
       this.framesListController.init();
 
       this.layersListController = new pskl.controller.LayersListController(this.piskelController);
@@ -116,9 +110,6 @@
 
       this.canvasBackgroundController = new pskl.controller.CanvasBackgroundController();
       this.canvasBackgroundController.init();
-
-      this.indexedDbStorageService = new pskl.service.storage.IndexedDbStorageService(this.piskelController);
-      this.indexedDbStorageService.init();
 
       this.localStorageService = new pskl.service.storage.LocalStorageService(this.piskelController);
       this.localStorageService.init();
@@ -174,9 +165,6 @@
         this.currentColorsService);
       this.performanceReportService.init();
 
-      this.clipboardService = new pskl.service.ClipboardService(this.piskelController);
-      this.clipboardService.init();
-
       this.drawingLoop = new pskl.rendering.DrawingLoop();
       this.drawingLoop.addCallback(this.render, this);
       this.drawingLoop.start();
@@ -199,15 +187,10 @@
         gui.Window.get().menu = mb;
       }
 
-      if (!pskl.utils.Environment.isIntegrationTest() && pskl.utils.UserAgent.isUnsupported()) {
-        $.publish(Events.DIALOG_SHOW, {
+      if (pskl.utils.UserAgent.isUnsupported()) {
+        $.publish(Events.DIALOG_DISPLAY, {
           dialogId : 'unsupported-browser'
         });
-      }
-
-      if (pskl.utils.Environment.isDebug()) {
-        pskl.app.shortcutService.registerShortcut(pskl.service.keyboard.Shortcuts.DEBUG.RELOAD_STYLES,
-          window.reloadStyles);
       }
     },
 
