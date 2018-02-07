@@ -30,8 +30,10 @@
   "js/utils/FrameUtils.js",
   "js/utils/ImageResizer.js",
   "js/utils/LayerUtils.js",
+  "js/utils/MergeUtils.js",
   "js/utils/PixelUtils.js",
   "js/utils/PiskelFileUtils.js",
+  "js/utils/ResizeUtils.js",
   "js/utils/StringUtils.js",
   "js/utils/Template.js",
   "js/utils/TooltipFormatter.js",
@@ -54,6 +56,7 @@
   // JSZip https://github.com/Stuk/jszip
   "js/lib/jszip/jszip.min.js",
 
+  "js/lib/scrollifneeded/scrollifneeded.js",
   // Smoothscroll: https://github.com/iamdustan/smoothscroll
   "js/lib/smoothscroll/smoothscroll.js",
 
@@ -75,6 +78,11 @@
   "js/model/frame/RenderedFrame.js",
   "js/model/Palette.js",
   "js/model/Piskel.js",
+
+  // Database (IndexedDB)
+  "js/database/BackupDatabase.js",
+  "js/database/PiskelDatabase.js",
+  "js/database/migrate/MigrateLocalStorageToIndexedDb.js",
 
   // Selection
   "js/selection/SelectionManager.js",
@@ -119,13 +127,15 @@
 
   // Settings sub-controllers
   "js/controller/settings/AbstractSettingController.js",
-  "js/controller/settings/ApplicationSettingsController.js",
+  "js/controller/settings/preferences/GridPreferencesController.js",
+  "js/controller/settings/preferences/MiscPreferencesController.js",
+  "js/controller/settings/preferences/TilePreferencesController.js",
+  "js/controller/settings/PreferencesController.js",
   "js/controller/settings/exportimage/GifExportController.js",
   "js/controller/settings/exportimage/PngExportController.js",
   "js/controller/settings/exportimage/ZipExportController.js",
   "js/controller/settings/exportimage/MiscExportController.js",
   "js/controller/settings/exportimage/ExportController.js",
-  "js/controller/settings/resize/AnchorWidget.js",
   "js/controller/settings/resize/ResizeController.js",
   "js/controller/settings/resize/DefaultSizeController.js",
   "js/controller/settings/SaveController.js",
@@ -137,9 +147,17 @@
   // Dialogs sub-controllers
   "js/controller/dialogs/AbstractDialogController.js",
   "js/controller/dialogs/CreatePaletteController.js",
-  "js/controller/dialogs/ImportImageController.js",
   "js/controller/dialogs/BrowseLocalController.js",
   "js/controller/dialogs/CheatsheetController.js",
+  "js/controller/dialogs/backups/steps/SelectSession.js",
+  "js/controller/dialogs/backups/steps/SessionDetails.js",
+  "js/controller/dialogs/backups/BrowseBackups.js",
+  "js/controller/dialogs/importwizard/steps/AbstractImportStep.js",
+  "js/controller/dialogs/importwizard/steps/AdjustSize.js",
+  "js/controller/dialogs/importwizard/steps/ImageImport.js",
+  "js/controller/dialogs/importwizard/steps/InsertLocation.js",
+  "js/controller/dialogs/importwizard/steps/SelectMode.js",
+  "js/controller/dialogs/importwizard/ImportWizard.js",
   "js/controller/dialogs/PerformanceInfoController.js",
   "js/controller/dialogs/UnsupportedBrowserController.js",
 
@@ -147,14 +165,20 @@
   "js/controller/dialogs/DialogsController.js",
 
   // Widgets
+  "js/widgets/AnchorWidget.js",
   "js/widgets/ColorsList.js",
+  "js/widgets/FramePicker.js",
   "js/widgets/HslRgbColorPicker.js",
   "js/widgets/SizeInput.js",
+  "js/widgets/SizePicker.js",
   "js/widgets/SynchronizedInputs.js",
+  "js/widgets/Tabs.js",
+  "js/widgets/Wizard.js",
 
   // Services
   "js/service/storage/StorageService.js",
   "js/service/storage/FileDownloadStorageService.js",
+  "js/service/storage/IndexedDbStorageService.js",
   "js/service/storage/LocalStorageService.js",
   "js/service/storage/GalleryStorageService.js",
   "js/service/storage/DesktopStorageService.js",
@@ -180,15 +204,13 @@
   "js/service/keyboard/ShortcutService.js",
   "js/service/ImportService.js",
   "js/service/ImageUploadService.js",
+  "js/service/ClipboardService.js",
   "js/service/CurrentColorsService.js",
   "js/service/FileDropperService.js",
   "js/service/SelectedColorsService.js",
   "js/service/MouseStateService.js",
   "js/service/performance/PerformanceReport.js",
   "js/service/performance/PerformanceReportService.js",
-  "js/service/storage/LocalStorageService.js",
-  "js/service/storage/GalleryStorageService.js",
-  "js/service/storage/DesktopStorageService.js",
 
   // Tools
   "js/tools/ToolsHelper.js",
@@ -216,6 +238,7 @@
   "js/tools/transform/AbstractTransformTool.js",
   "js/tools/transform/Center.js",
   "js/tools/transform/Clone.js",
+  "js/tools/transform/Crop.js",
   "js/tools/transform/Flip.js",
   "js/tools/transform/Rotate.js",
   "js/tools/transform/TransformUtils.js",
